@@ -51,7 +51,7 @@ void loop() {
     digitalWrite(yled,1);
     digitalWrite(gled,0);
   }
-  else if (!digitalRead(jclick)) { //If you click the joystick button (mine might be slightly broken, so clicking the stick doesn't work well, but the button itself works), it stops playing.
+  else if (!digitalRead(jclick)) { //If you click the joystick button, it stops playing.
     noTone(buzzer);
     dac1.disable();
     Serial.println("Stopped");
