@@ -1,5 +1,3 @@
-Charles Kahn
-
 # Really Simple Digital Instrument
 
 This is an Arduino sketch, originally from an academic assignment, for a simple musical instrument composed of an ESP32, a joystick, and a passive buzzer.
