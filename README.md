@@ -1,21 +1,42 @@
 Charles Kahn
 
-# Lab 5: Integration Exploration
+# Really Simple Digital Instrument
 
-This is the fourth assignment working with the ESP32.
+This is an Arduino sketch, originally from an academic assignment, for a simple musical instrument composed of an ESP32, a joystick, and a passive buzzer.
 
-In this lab, we used a sensor to affect the behavior of an actuator. I chose a joystick and a buzzer.
+The instrument uses the two analog outputs from the joystick to select a frequency and a waveform. If the joystick is on the right side, the buzzer will receive a square wave. If the joystick is on the left side, it will receive a sine wave. The vertical position determines the frequency of the buzzer, discretized to 25 notes.
 
-Code is flashed to the ESP32 via Arduino IDE. My MD editor is vim, my OS is Windows, and code is written in the AIDE.
-
-This submission uses the two analog outputs from the joystick to select a frequency and a waveform. If the joystick is on the right side, the buzzer will receive a square wave. If the joystick is on the left side, it will receive a sine wave. This means I technically made a 2-tone 1-channel synthesizer. The y position of the joystick determines the frequency played, discretized to 25 notes across 2-ish octaves.
-
-To accomplish this, I used the Arduino IDE's tone() function to control the square wave and the DacESP32 library to control the sine wave produced by the ESP32's cosine function generator. I then had to make the argument for the cosine frequency one whole step lower than the actual frequency, because the cosine generator seems to output a wave of a frequency a certain amount higher than requested.
+Square wave generation uses Arduino's tone() function and sine wave generation uses the DACESP32 library to take advantage of the ESP32's built in cosine generator. The sine wave is then pitched down one whole step to match the frequency of the square wave.
 
 The code for this main routine is in [main.ino](main/main.ino).
 
-To make sure that all the code I was writing for that would work properly, I also created a joystick tester sketch. This confirmed, without annoying sounds, that the correct orientation of the joystick for this purpose is with the wires on the right, because I don't want to deal with pullup logic.
+This repository also includes a joystick tester sketch in order to determine the correct orientation of the joystick. The code for this tester is in [joystick\_test.ino](joystick_test/joystick_test.ino).
 
-The code for this tester is in [joystick\_test.ino](joystick_test/joystick_test.ino).
+## Setup
 
-For the extra credit, I decided to use the LED traffic light as a simple information readout. Because it was driving me insane, I decided to add a stop-playing function tied to the button on the joystick. Red means stopped, yellow means sine, and green means square. I didn't keep it separate from the normal-credit stuff because it's difficult to separate and easy to notice and comment out.
+Currently, this requires:
+
+- Adafruit ESP32 Feather V2 microcontroller
+- Dual-axis thumbstick supporting 3.3V Vcc
+- Single channel passive buzzer (also 3.3V)
+
+Pins are connected as follows:
+
+- Joystick x: Pin A4
+- Joystick y: Pin A5
+- Passive Buzzer: DAC1 (Pin A1)
+
+All pin references are for the Adafruit ESP32 Feather V2 microcontroller. These values may be substituted for equivalent analog inputs and DAC outputs on other platforms, but the sketch must be modified to do so.
+
+## Optional Features
+
+If the joystick used has a clicking function, or an additional button is added, clicking it will cause the instrument to stop playing. The button input is assigned to the Feather V2's pin 15.
+
+The device can also support an LED readout with three lights, only one of which is on at any one time. The first means stopped, the second means sine, and the third means square. The first LED is assigned to Pin 33, the second to Pin 27, and the third to Pin 12.
+
+## TODO
+
+- Add circuit diagrams to README
+- Allow other ESP32 boards (possible support for non-ESP32 as well)
+- Output over USB
+- Transition away from Arduino IDE
